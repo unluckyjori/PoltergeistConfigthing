@@ -296,18 +296,35 @@ namespace Poltergeist
             if (__instance is DoublewingAI)
                 return;
 
-            if (Poltergeist.Config.IsEnemyPesterBlocked(__instance.GetType().Name))
-                return;
+            try
+            {
+                if (Poltergeist.Config.IsEnemyPesterBlocked(__instance.GetType().Name))
+                {
+                    Poltergeist.DebugLog($"Enemy {__instance.GetType().Name} is blacklisted from pestering");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Poltergeist.LogError($"Failed to check pester blacklist for {__instance.GetType().Name}: {ex}");
+            }
 
             //Everything else, set it up
             if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
             {
-                Poltergeist.DebugLog("Making interactor for " + __instance.name);
-                GameObject interactObject = GameObject.Instantiate(Poltergeist.enemyInteractibleObject, __instance.transform);
-                interactObject.name = __instance.name + "Interactor";
-                interactObject.GetComponent<NetworkedInteractible>().intendedParent = __instance.transform;
-                interactObject.GetComponent<NetworkObject>().Spawn();
-                interactObject.transform.parent = __instance.transform;
+                try
+                {
+                    Poltergeist.DebugLog("Making interactor for " + __instance.name);
+                    GameObject interactObject = GameObject.Instantiate(Poltergeist.enemyInteractibleObject, __instance.transform);
+                    interactObject.name = __instance.name + "Interactor";
+                    interactObject.GetComponent<NetworkedInteractible>().intendedParent = __instance.transform;
+                    interactObject.GetComponent<NetworkObject>().Spawn();
+                    interactObject.transform.parent = __instance.transform;
+                }
+                catch (Exception ex)
+                {
+                    Poltergeist.LogError($"Failed to add enemy interactor for {__instance.name}: {ex}");
+                }
             }
         }
 
