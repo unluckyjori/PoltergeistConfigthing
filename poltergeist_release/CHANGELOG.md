@@ -1,3 +1,6 @@
+# 1.2.7
+- Added debug logs for enemy pester interactors.
+
 # 1.2.6
 - Added config option to blacklist enemies from being pestered.
 # 1.2.5
