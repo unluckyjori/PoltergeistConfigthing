@@ -23,6 +23,7 @@ namespace Poltergeist
         [field: SyncedEntryField] public SyncedEntry<float> TimeForAggro { get; private set; }
         [field: SyncedEntryField] public SyncedEntry<int> HitsForAggro { get; private set; }
         [field: SyncedEntryField] public SyncedEntry<float> AudioTime { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<string> PesterBlacklist { get; private set; }
 
         //Cost-related entries
         [field: SyncedEntryField] public SyncedEntry<float> DoorCost { get; private set; }
@@ -123,6 +124,14 @@ namespace Poltergeist
                     new AcceptableValueRange<float>(0, float.MaxValue)
                     )
                 );
+            PesterBlacklist = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced", "Pester blacklist"),
+                "",
+                new ConfigDescription(
+                    "Comma separated list of enemy script type names that cannot be pestered.",
+                    null
+                    )
+                );
 
             //Bind the cost-related configs
             DoorCost = cfg.BindSyncedEntry(
@@ -208,6 +217,20 @@ namespace Poltergeist
 
             //Register the config
             ConfigManager.Register(this);
+        }
+
+        public bool IsEnemyPesterBlocked(string typeName)
+        {
+            if (string.IsNullOrWhiteSpace(PesterBlacklist.Value))
+                return false;
+
+            string[] blocked = PesterBlacklist.Value.Split(',');
+            foreach (string s in blocked)
+            {
+                if (typeName.Equals(s.Trim(), StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
         }
     }
 }

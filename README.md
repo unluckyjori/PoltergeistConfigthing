@@ -71,6 +71,7 @@ These settings are synced, so whatever settings the host has will be used by eve
 - **Pester Aggro Timespan**: How many seconds have to pass before enemies forget that they've been pestered by any ghosts.
 - **Aggro Hit Requirement**: How many times do ghosts have to pester the same enemy before that enemy gets mad at the nearest player with line-of-sight.
 - **Audio Play Time**: How long ghost sounds can play, in seconds.
+- **Pester Blacklist**: Comma separated list of enemy script names that cannot be pestered.
 - **Costs**: Many different interaction costs are configurable, with the categories being:
   - **Regular Doors**
   - **Big Doors**: Both the pressurized facility doors as well as the Artifice hangar doors fall under this.

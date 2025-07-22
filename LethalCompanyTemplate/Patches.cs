@@ -296,6 +296,9 @@ namespace Poltergeist
             if (__instance is DoublewingAI)
                 return;
 
+            if (Poltergeist.Config.IsEnemyPesterBlocked(__instance.GetType().Name))
+                return;
+
             //Everything else, set it up
             if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
             {

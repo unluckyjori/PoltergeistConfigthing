@@ -1,3 +1,5 @@
+# 1.2.6
+- Added config option to blacklist enemies from being pestered.
 # 1.2.5
 - Fixed bug that caused the game to look slightly different with the mod on.
 # 1.2.4
