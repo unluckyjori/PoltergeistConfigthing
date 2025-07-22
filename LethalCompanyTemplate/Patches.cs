@@ -294,17 +294,30 @@ namespace Poltergeist
         {
             //Screw manticoils all my homies hate manticoils
             if (__instance is DoublewingAI)
+            {
+                Poltergeist.DebugLog($"Not adding interactor for {__instance.name} - DoublewingAI is skipped");
                 return;
+            }
+
+            if (Poltergeist.Config.IsEnemyPesterBlocked(__instance.GetType().Name))
+            {
+                Poltergeist.DebugLog($"Not adding interactor for {__instance.name} - blocked by config");
+                return;
+            }
 
             //Everything else, set it up
             if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
             {
-                Poltergeist.DebugLog("Making interactor for " + __instance.name);
                 GameObject interactObject = GameObject.Instantiate(Poltergeist.enemyInteractibleObject, __instance.transform);
                 interactObject.name = __instance.name + "Interactor";
                 interactObject.GetComponent<NetworkedInteractible>().intendedParent = __instance.transform;
                 interactObject.GetComponent<NetworkObject>().Spawn();
                 interactObject.transform.parent = __instance.transform;
+                Poltergeist.DebugLog($"Added enemy interactor for {__instance.name}");
+            }
+            else
+            {
+                Poltergeist.DebugLog($"Not host/server, interactor for {__instance.name} not created");
             }
         }
 
