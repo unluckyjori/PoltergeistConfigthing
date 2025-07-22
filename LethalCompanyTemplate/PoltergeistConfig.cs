@@ -132,6 +132,7 @@ namespace Poltergeist
                     null
                     )
                 );
+            Poltergeist.DebugLog($"Loaded pester blacklist: '{PesterBlacklist.Value}'");
 
             //Bind the cost-related configs
             DoorCost = cfg.BindSyncedEntry(
@@ -221,14 +222,31 @@ namespace Poltergeist
 
         public bool IsEnemyPesterBlocked(string typeName)
         {
-            if (string.IsNullOrWhiteSpace(PesterBlacklist.Value))
-                return false;
-
-            string[] blocked = PesterBlacklist.Value.Split(',');
-            foreach (string s in blocked)
+            try
             {
-                if (typeName.Equals(s.Trim(), StringComparison.OrdinalIgnoreCase))
-                    return true;
+                if (string.IsNullOrWhiteSpace(PesterBlacklist.Value))
+                    return false;
+
+                string[] blocked = PesterBlacklist.Value.Split(',');
+                foreach (string s in blocked)
+                {
+                    string trimmed = s.Trim();
+                    if (string.IsNullOrEmpty(trimmed))
+                        continue;
+
+                    bool match = typeName.Equals(trimmed, StringComparison.OrdinalIgnoreCase) ||
+                                 typeName.EndsWith(trimmed, StringComparison.OrdinalIgnoreCase);
+
+                    if (match)
+                    {
+                        Poltergeist.DebugLog($"Blacklisted enemy type matched: {typeName} matches {trimmed}");
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Poltergeist.LogError($"Error checking pester blacklist for {typeName}: {ex}");
             }
             return false;
         }
