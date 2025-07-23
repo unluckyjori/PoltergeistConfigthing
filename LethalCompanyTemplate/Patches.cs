@@ -150,14 +150,15 @@ namespace Poltergeist
         public static void AddGhostInteractor(InteractTrigger __instance)
         {
             //If it's a door, add the interactible
-            if (__instance.gameObject.GetComponent<DoorLock>() != null) {
+            if (__instance.gameObject.GetComponent<DoorLock>() != null && Poltergeist.Config.EnableDoor.Value) {
                 BasicInteractible interactible = __instance.gameObject.AddComponent<BasicInteractible>();
                 interactible.costType = CostType.DOOR;
                 return;
             }
 
             //If its a lightswitch or a storage locker, add one
-            if (__instance.name.Equals("LightSwitch") || (__instance.transform.parent != null && __instance.transform.parent.name.Contains("storage")))
+            if ((__instance.name.Equals("LightSwitch") || (__instance.transform.parent != null && __instance.transform.parent.name.Contains("storage")))
+                && Poltergeist.Config.EnableMisc.Value)
             {
                 BasicInteractible interactible = __instance.gameObject.AddComponent<BasicInteractible>();
                 return;
@@ -165,7 +166,7 @@ namespace Poltergeist
 
             //If it's a ship decoration, add it (can't figure out a better way than checking name)
             Transform parent = __instance.transform.parent;
-            if(parent != null)
+            if(parent != null && Poltergeist.Config.EnableMisc.Value)
             {
                 if(parent.name.Contains("Pumpkin") || parent.name.Contains("Television") || parent.name.Contains("Record") || parent.name.Contains("Romantic")
                      || parent.name.Contains("Shower") || parent.name.Contains("Toilet") || parent.name.Contains("Plushie"))
@@ -176,7 +177,7 @@ namespace Poltergeist
             }
 
             //If it's one of the ship buttons, add one
-            if(parent != null)
+            if(parent != null && Poltergeist.Config.EnableShipDoor.Value)
             {
                 if(parent.name.Equals("StartButton") || parent.name.Equals("StopButton"))
                 {
@@ -187,7 +188,7 @@ namespace Poltergeist
             }
 
             //If it's a steam valve, add one
-            if(__instance.gameObject.GetComponent<SteamValveHazard>() != null)
+            if(__instance.gameObject.GetComponent<SteamValveHazard>() != null && Poltergeist.Config.EnableValve.Value)
             {
                 BasicInteractible interactible = __instance.gameObject.AddComponent<BasicInteractible>();
                 interactible.costType = CostType.VALVE;
@@ -195,7 +196,7 @@ namespace Poltergeist
             }
 
             //If it's the company bell, add one
-            if (parent != null)
+            if (parent != null && Poltergeist.Config.EnableCompanyBell.Value)
             {
                 if (parent.name.Equals("BellDinger"))
                 {
@@ -206,7 +207,7 @@ namespace Poltergeist
             }
 
             //If it's the lever for the big hangar, add one
-            if(__instance.name.Contains("LeverSwitchHandle"))
+            if(__instance.name.Contains("LeverSwitchHandle") && Poltergeist.Config.EnableBigDoor.Value)
             {
                 BasicInteractible interactible = __instance.gameObject.AddComponent<BasicInteractible>();
                 interactible.costType = CostType.HANGARDOOR;
@@ -214,7 +215,7 @@ namespace Poltergeist
             }
 
             //If it's the loudhorn, add one
-            if(__instance.GetComponent<ShipAlarmCord>() != null)
+            if(__instance.GetComponent<ShipAlarmCord>() != null && Poltergeist.Config.EnableMisc.Value)
             {
                 BasicInteractible interactible = __instance.gameObject.AddComponent<BasicInteractible>();
                 interactible.costType = CostType.MISC;
@@ -223,7 +224,7 @@ namespace Poltergeist
             }
 
             //If it's the elevator button, add one
-            if (__instance.transform.parent != null && __instance.transform.parent.name.Equals("ElevatorButtonTrigger"))
+            if (__instance.transform.parent != null && __instance.transform.parent.name.Equals("ElevatorButtonTrigger") && Poltergeist.Config.EnableBigDoor.Value)
             {
                 BasicInteractible interactible = __instance.gameObject.AddComponent<BasicInteractible>();
                 interactible.costType = CostType.HANGARDOOR;
@@ -240,7 +241,7 @@ namespace Poltergeist
         [HarmonyPatch(typeof(GrabbableObject), "Start")]
         public static void AddInteractorForProp(GrabbableObject __instance)
         {
-            if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+            if ((NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) && Poltergeist.Config.EnableNoisyItem.Value)
             {
                 if (__instance is NoisemakerProp || __instance is BoomboxItem ||
                     __instance is RadarBoosterItem || __instance is RemoteProp) {
@@ -263,7 +264,7 @@ namespace Poltergeist
         public static void AddInteractorForBigDoors(TerminalAccessibleObject __instance)
         {
             //Only add if it's a big door
-            if(__instance.name.Contains("BigDoor"))
+            if(__instance.name.Contains("BigDoor") && Poltergeist.Config.EnableBigDoor.Value)
             {
                 //Make the gameobject on the door
                 GameObject interactObj = new GameObject();
@@ -292,6 +293,9 @@ namespace Poltergeist
         [HarmonyPatch(typeof(MaskedPlayerEnemy), "Start")]
         public static void AddInteractorForEnemies(EnemyAI __instance)
         {
+            if (!Poltergeist.Config.EnablePester.Value)
+                return;
+
             //Screw manticoils all my homies hate manticoils
             if (__instance is DoublewingAI)
                 return;
@@ -310,7 +314,7 @@ namespace Poltergeist
             }
 
             //Everything else, set it up
-            if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+            if ((NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) && Poltergeist.Config.EnablePester.Value)
             {
                 try
                 {
@@ -336,7 +340,7 @@ namespace Poltergeist
         public static void WhoopiePatch(GrabbableObject __instance)
         {
             //See if this is a whoopie cushion, and make the ghost trigger if it is
-            if (__instance is WhoopieCushionItem)
+            if (Poltergeist.Config.EnableNoisyItem.Value && __instance is WhoopieCushionItem)
             {
                 GameObject.Instantiate(Poltergeist.itemTriggerObject, __instance.transform).transform.localPosition = Vector3.zero;
             }

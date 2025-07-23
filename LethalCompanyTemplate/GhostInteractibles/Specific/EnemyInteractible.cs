@@ -61,6 +61,9 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override float Interact(Transform playerTransform)
         {
+            if (!Poltergeist.Config.EnablePester.Value)
+                return 0;
+
             //Abort if there's no enemy somehow
             if (enemy == null)
                 return 0;
@@ -114,6 +117,9 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override string GetTipText()
         {
+            if (!Poltergeist.Config.EnablePester.Value)
+                return "";
+
             //Abort if there's no enemy somehow
             if (enemy == null)
                 return "Enemy is not synced!";

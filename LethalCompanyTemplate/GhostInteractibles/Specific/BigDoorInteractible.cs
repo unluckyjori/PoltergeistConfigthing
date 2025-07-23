@@ -35,6 +35,9 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override float Interact(Transform playerTransform)
         {
+            if (!Poltergeist.Config.EnableBigDoor.Value)
+                return 0;
+
             //Don't let them interact without meeting the cost
             if (SpectatorCamController.instance.Power < GetCost())
                 return 0;
@@ -56,6 +59,9 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override string GetTipText()
         {
+            if (!Poltergeist.Config.EnableBigDoor.Value)
+                return "";
+
             string retStr = "";
 
             //Display message for not having enough power

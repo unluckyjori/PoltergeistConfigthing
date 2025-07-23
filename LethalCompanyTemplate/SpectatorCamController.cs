@@ -232,10 +232,12 @@ namespace Poltergeist
                 str += "Lock Altitude; [" + PoltergeistCustomInputs.GetKeyString(PoltergeistCustomInputs.instance.LockKey) + "]\n\n";
                 str += "Teleport to players; [1-9]\n";
                 str += "Toggle Ghost Light; [" + PoltergeistCustomInputs.GetKeyString(PoltergeistCustomInputs.instance.SwitchLightButton) + "]\n";
-                str += "Manifest; [" + PoltergeistCustomInputs.GetKeyString(PoltergeistCustomInputs.instance.ManifestKey) + "] (Cost: "
-                    + Poltergeist.Config.ManifestCost.Value + ")\n";
-                str += "Play Audio; [" + PoltergeistCustomInputs.GetKeyString(PoltergeistCustomInputs.instance.BarkKey) + "] (Cost: "
-                    + Poltergeist.Config.BarkCost.Value + ")";
+                if (Poltergeist.Config.EnableManifest.Value)
+                    str += "Manifest; [" + PoltergeistCustomInputs.GetKeyString(PoltergeistCustomInputs.instance.ManifestKey) + "] (Cost: "
+                        + Poltergeist.Config.ManifestCost.Value + ")\n";
+                if (Poltergeist.Config.EnableAudio.Value)
+                    str += "Play Audio; [" + PoltergeistCustomInputs.GetKeyString(PoltergeistCustomInputs.instance.BarkKey) + "] (Cost: "
+                        + Poltergeist.Config.BarkCost.Value + ")";
             }
             controlsText.text = str;
         }
@@ -436,6 +438,9 @@ namespace Poltergeist
             if (!context.performed || Patches.vanillaMode)
                 return;
 
+            if (!Poltergeist.Config.EnableManifest.Value)
+                return;
+
             //Don't do things if paused
             if (clientPlayer.isTypingChat || clientPlayer.quickMenuManager.isMenuOpen)
                 return;
@@ -455,6 +460,9 @@ namespace Poltergeist
         {
             //Only do it if performing and not in vanilla mode
             if (!context.performed || Patches.vanillaMode)
+                return;
+
+            if (!Poltergeist.Config.EnableAudio.Value)
                 return;
             
             //Don't do things if paused
@@ -498,8 +506,10 @@ namespace Poltergeist
             PoltergeistCustomInputs.instance.DecelerateButton.performed += Decelerate;
             PoltergeistCustomInputs.instance.ToggleButton.performed += SwitchModes;
             PoltergeistCustomInputs.instance.LockKey.performed += LockAltitude;
-            PoltergeistCustomInputs.instance.ManifestKey.performed += ManifestHead;
-            PoltergeistCustomInputs.instance.BarkKey.performed += Bark;
+            if (Poltergeist.Config.EnableManifest.Value)
+                PoltergeistCustomInputs.instance.ManifestKey.performed += ManifestHead;
+            if (Poltergeist.Config.EnableAudio.Value)
+                PoltergeistCustomInputs.instance.BarkKey.performed += Bark;
             PoltergeistCustomInputs.instance.ToggleControlsKey.performed += ToggleControlVis;
 
         }
@@ -511,8 +521,10 @@ namespace Poltergeist
             PoltergeistCustomInputs.instance.DecelerateButton.performed -= Decelerate;
             PoltergeistCustomInputs.instance.ToggleButton.performed -= SwitchModes;
             PoltergeistCustomInputs.instance.LockKey.performed -= LockAltitude;
-            PoltergeistCustomInputs.instance.ManifestKey.performed -= ManifestHead;
-            PoltergeistCustomInputs.instance.BarkKey.performed -= Bark;
+            if (Poltergeist.Config.EnableManifest.Value)
+                PoltergeistCustomInputs.instance.ManifestKey.performed -= ManifestHead;
+            if (Poltergeist.Config.EnableAudio.Value)
+                PoltergeistCustomInputs.instance.BarkKey.performed -= Bark;
             PoltergeistCustomInputs.instance.ToggleControlsKey.performed -= ToggleControlVis;
         }
 

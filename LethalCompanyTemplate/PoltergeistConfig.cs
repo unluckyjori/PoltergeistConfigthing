@@ -37,6 +37,18 @@ namespace Poltergeist
         [field: SyncedEntryField] public SyncedEntry<float> BarkCost { get; private set; }
         [field: SyncedEntryField] public SyncedEntry<float> MiscCost { get; private set; }
 
+        //Feature toggle entries
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableDoor { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableBigDoor { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableNoisyItem { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableValve { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableShipDoor { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableCompanyBell { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnablePester { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableManifest { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableAudio { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableMisc { get; private set; }
+
         /**
          * Make an instance of the config
          */
@@ -213,6 +225,88 @@ namespace Poltergeist
                 new ConfigDescription(
                     "The power required to do any interactions not covered by another section.",
                     new AcceptableValueRange<float>(0, float.MaxValue)
+                    )
+                );
+
+            //Bind the feature toggles
+            EnableDoor = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable door"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot open or close regular doors.",
+                    null
+                    )
+                );
+            EnableBigDoor = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable big door"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot interact with large doors or the mineshaft elevator.",
+                    null
+                    )
+                );
+            EnableNoisyItem = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable noisy item"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot use noisy items or whoopie cushions.",
+                    null
+                    )
+                );
+            EnableValve = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable valve"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot turn steam valves.",
+                    null
+                    )
+                );
+            EnableShipDoor = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable ship door"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot use ship doors.",
+                    null
+                    )
+                );
+            EnableCompanyBell = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable company bell"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot ring the company bell.",
+                    null
+                    )
+                );
+            EnablePester = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable pester"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot pester enemies.",
+                    null
+                    )
+                );
+            EnableManifest = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable manifest"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot manifest.",
+                    null
+                    )
+                );
+            EnableAudio = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable audio"),
+                true,
+                new ConfigDescription(
+                    "If false, ghosts cannot play audio.",
+                    null
+                    )
+                );
+            EnableMisc = cfg.BindSyncedEntry(
+                new ConfigDefinition("Synced: Features", "Enable misc"),
+                true,
+                new ConfigDescription(
+                    "If false, miscellaneous ghost interactions are disabled.",
+                    null
                     )
                 );
 

@@ -197,7 +197,8 @@ namespace Poltergeist
         [ClientRpc]
         public void ManifestClientRpc()
         {
-            PlayFlickerAnim();
+            if (Poltergeist.Config.EnableManifest.Value)
+                PlayFlickerAnim();
         }
 
         /**
@@ -244,7 +245,8 @@ namespace Poltergeist
         [ClientRpc]
         public void BarkClientRpc(int index)
         {
-            PlayBarkAudio(index);
+            if (Poltergeist.Config.EnableAudio.Value)
+                PlayBarkAudio(index);
         }
 
         /**
@@ -269,6 +271,9 @@ namespace Poltergeist
          */
         public void PlayBarkAudio(int index)
         {
+            if (!Poltergeist.Config.EnableAudio.Value)
+                return;
+
             //Make sure it's not already playing
             if (IsBarking())
                 return;
