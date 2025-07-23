@@ -102,7 +102,7 @@ namespace Poltergeist
          */
         public static void DebugLog(string msg)
         {
-            if(Config.ShowDebugLogs.Value)
+            if(instance != null && Config != null && Config.ShowDebugLogs.Value)
                 instance.Logger.LogInfo(msg);
         }
 
