@@ -45,11 +45,34 @@ namespace Poltergeist.GhostInteractibles.Specific
             }
         }
 
+        private bool FeatureEnabled()
+        {
+            switch(costType)
+            {
+                case CostType.DOOR:
+                    return Poltergeist.Config.EnableDoor.Value;
+                case CostType.VALVE:
+                    return Poltergeist.Config.EnableValve.Value;
+                case CostType.SHIPDOOR:
+                    return Poltergeist.Config.EnableShipDoor.Value;
+                case CostType.COMPANYBELL:
+                    return Poltergeist.Config.EnableCompanyBell.Value;
+                case CostType.HANGARDOOR:
+                    return Poltergeist.Config.EnableBigDoor.Value;
+                default:
+                    return Poltergeist.Config.EnableMisc.Value;
+            }
+        }
+
         /**
          * Do the actual interaction
          */
         public override float Interact(Transform playerTransform)
         {
+            //Check if this feature is enabled
+            if (!FeatureEnabled())
+                return 0;
+
             //Don't let them interact without meeting the cost
             if (SpectatorCamController.instance.Power < GetCost())
                 return 0;
@@ -75,6 +98,10 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override string GetTipText()
         {
+            //Don't show anything if disabled
+            if (!FeatureEnabled())
+                return "";
+
             string retStr = "";
 
             //Display message for not having enough power

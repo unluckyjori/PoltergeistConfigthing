@@ -45,6 +45,9 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override float Interact(Transform playerTransform)
         {
+            if (!Poltergeist.Config.EnableNoisyItem.Value)
+                return 0;
+
             //Abort if there's no prop somehow
             if (prop == null)
                 return 0;
@@ -83,6 +86,9 @@ namespace Poltergeist.GhostInteractibles.Specific
          */
         public override string GetTipText()
         {
+            if (!Poltergeist.Config.EnableNoisyItem.Value)
+                return "";
+
             //Abort if there's no prop somehow
             if (prop == null)
                 return "Prop not synced correctly!";
